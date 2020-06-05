@@ -24,7 +24,7 @@ NewProxy - утилита для создания простых прокси-с
 * Finish (действия при непредвиденной ошибке)
 
 Работа прокси-сервера описывается следующей блок-схемой:
-![](https://raw.githubusercontent.com/SergeyKuz1001/NewProxy/1eda0eb066e6dc0a2c175de91b7b78f8dbfab636/architecture.bmp)
+![](https://raw.githubusercontent.com/SergeyKuz1001/NewProxy/5e5255660f673f226fb63bead6c4a4b8fde22a66/architecture.png)
 
 Как видно, архитектура достаточно проста и абстрактна для прокси-сервера. Вся основная логика работы прокси-сервера
 определяется через определение основных блоков.
