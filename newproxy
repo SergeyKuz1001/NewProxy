@@ -11,7 +11,8 @@ print_help_page() {
   -? - print help page and exit"
 }
 
-newproxy_dir=$(dirname $(readlink -e $0))
+newproxy_full_name=$(readlink -e "$0")
+newproxy_dir=$(dirname "$newproxy_full_name")
 
 on_C=no
 file_name=proxy
@@ -48,18 +49,16 @@ then
     exit 1
 fi
 
-sed -e "s/<host>/\"$host\"/; s/<port>/\"$port\"/" $newproxy_dir/proxy_main_proto.c > $newproxy_dir/proxy_main.c
-
-if [ $? != 0 ]
+if ! sed -e "s/<host>/\"$host\"/; s/<port>/\"$port\"/" "$newproxy_dir"/proxy_main_proto.c > "$newproxy_dir"/proxy_main.c
 then
     exit 1
 fi
 
 if [ "$on_C" = yes ]
 then
-    cp $source_name $newproxy_dir/user_funcs.c
+    cp "$source_name" "$newproxy_dir"/user_funcs.c
 else
-    cp $source_name $newproxy_dir/user_funcs.cpp
+    cp "$source_name" "$newproxy_dir"/user_funcs.cpp
 fi
 
 if [ $? != 0 ]
@@ -70,20 +69,20 @@ fi
 if [ "$on_C" = yes ]
 then
     gcc -O3 \
-        $newproxy_dir/proxy_main.c \
-        $newproxy_dir/proxy_funcs.c \
-        $newproxy_dir/proxy_private_funcs.c \
-        $newproxy_dir/proxy_trace.c \
-        $newproxy_dir/user_funcs.c \
-    -o $file_name
+        "$newproxy_dir"/proxy_main.c \
+        "$newproxy_dir"/proxy_funcs.c \
+        "$newproxy_dir"/proxy_private_funcs.c \
+        "$newproxy_dir"/proxy_trace.c \
+        "$newproxy_dir"/user_funcs.c \
+    -o "$file_name"
 else
     g++ -O3 \
-        $newproxy_dir/proxy_main.c \
-        $newproxy_dir/proxy_funcs.c \
-        $newproxy_dir/proxy_private_funcs.c \
-        $newproxy_dir/proxy_trace.c \
-        $newproxy_dir/user_funcs.cpp \
-    -o $file_name
+        "$newproxy_dir"/proxy_main.c \
+        "$newproxy_dir"/proxy_funcs.c \
+        "$newproxy_dir"/proxy_private_funcs.c \
+        "$newproxy_dir"/proxy_trace.c \
+        "$newproxy_dir"/user_funcs.cpp \
+    -o "$file_name"
 fi
 
 if [ $? != 0 ]
