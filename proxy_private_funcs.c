@@ -10,7 +10,6 @@
 #include "proxy_trace.h"
 
 #define MAX_EVENT_AMOUNT 1024
-#define MAX_LISTEN_QUEUE_SIZE 100
 #define COLORIZATION_OUTPUT
 
 #ifdef COLORIZATION_OUTPUT
@@ -95,45 +94,4 @@ int proxy_epoll_event_rdhup(int index) {
 
 void proxy_epoll_finish() {
     close(epoll_fd);
-}
-
-int get_listening_socket_fd(const char* node, const char* service) {
-    int socket_fd;
-    struct addrinfo hints;
-    struct addrinfo *servinfo;
-    struct addrinfo *ptr;
-
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;
-
-    if (getaddrinfo(node, service, &hints, &servinfo) != 0) {
-        trace(TL_ERROR, "Failing getaddrinfo(%s, %s, ...)", node, service);
-        return -1;
-    }
-
-    for (ptr = servinfo; ptr != NULL; ptr = ptr->ai_next) {
-        socket_fd = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-        if (socket_fd == -1)
-            continue;
-        if (bind(socket_fd, ptr->ai_addr, ptr->ai_addrlen) != 0)
-            continue;
-        if (listen(socket_fd, MAX_LISTEN_QUEUE_SIZE) != -1)
-            break;
-        close(socket_fd);
-    }
-
-    freeaddrinfo(servinfo);
-    if (ptr == NULL) {
-        trace(TL_ERROR, "Finding correct socket");
-        return -1;
-    }
-    set_fd_nonblocking(socket_fd);
-    if (proxy_epoll_add_fd(socket_fd) == -1) {
-        trace(TL_ERROR, "Adding socket %d in epoll", socket_fd);
-        return -1;
-    }
-    trace(TL_OK, "Listening socket %d got", socket_fd);
-    return socket_fd;
 }

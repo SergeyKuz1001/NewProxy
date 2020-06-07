@@ -21,12 +21,21 @@ ConnectionInfo_t *socket_info;
 
 int init(int argc, char* argv[]) {
     trace(TL_INFO, "ID-proxy");
+    if (argc < 2) {
+        trace(TL_ERROR, "Listening port (first parameter) not found");
+        return -1;
+    }
+    int proxy_socket_fd = get_listening_socket_fd("localhost", argv[1]);
+    if (proxy_socket_fd == -1) {
+        trace(TL_ERROR, "Could not get a listening socket");
+        return -1;
+    }
     socket_info = malloc(MAX_SOCKET_AMOUNT * sizeof(ConnectionInfo_t));
     if (socket_info == NULL) {
         trace(TL_ERROR, "Allocation %ld bytes in memory", MAX_SOCKET_AMOUNT * sizeof(ConnectionInfo_t));
         return -1;
     }
-    return 0;
+    return proxy_socket_fd;
 }
 
 int connecting(int proxy_socket_fd) {

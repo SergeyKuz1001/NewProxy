@@ -9,4 +9,6 @@ int accept_connection(int accepting_socket_fd);
 
 char* get_ip_addr(int socket_fd);
 
+int get_listening_socket_fd(const char* node, const char* service);
+
 #endif

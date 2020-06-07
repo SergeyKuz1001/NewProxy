@@ -19,6 +19,4 @@ int proxy_epoll_event_rdhup(int index);
 
 void proxy_epoll_finish();
 
-int get_listening_socket_fd(const char* node, const char* service);
-
 #endif

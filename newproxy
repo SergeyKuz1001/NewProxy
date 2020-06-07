@@ -4,8 +4,6 @@ print_help_page() {
     echo "Usage: newproxy -s <source_name> -p <port> [-h <host>] [-n <file_name>] [-c] [-?]
 
   -s <source_name> - set file name with main functions to <source_name>
-  -p <port> - set listening port
-  -h <host> - set listening host (default to \"localhost\")
   -n <file_name> - set name of creating proxy server to <file_name> (default to \"proxy\")
   -c - compile proxy server as C project (default as C++ project)
   -? - print help page and exit"
@@ -16,19 +14,12 @@ newproxy_dir=$(dirname "$newproxy_full_name")
 
 on_C=no
 file_name=proxy
-host=localhost
 
-while getopts "s:p:h:n:c?" opt
+while getopts "s:n:c?" opt
 do
     case $opt in
     s)
         source_name=$OPTARG
-        ;;
-    p)
-        port=$OPTARG
-        ;;
-    h)
-        host=$OPTARG
         ;;
     n)
         file_name=$OPTARG
@@ -43,14 +34,9 @@ do
     esac
 done
 
-if [[ -z $source_name || -z $port ]]
+if [[ -z $source_name ]]
 then
     print_help_page
-    exit 1
-fi
-
-if ! sed -e "s/<host>/\"$host\"/; s/<port>/\"$port\"/" "$newproxy_dir"/proxy_main_proto.c > "$newproxy_dir"/proxy_main.c
-then
     exit 1
 fi
 
@@ -68,7 +54,7 @@ fi
 
 if [ "$on_C" = yes ]
 then
-    gcc -O3 \
+    gcc -O3 -Wall -Wpedantic -Wextra\
         "$newproxy_dir"/proxy_main.c \
         "$newproxy_dir"/proxy_funcs.c \
         "$newproxy_dir"/proxy_private_funcs.c \
@@ -76,7 +62,7 @@ then
         "$newproxy_dir"/user_funcs.c \
     -o "$file_name"
 else
-    g++ -O3 \
+    g++ -O3 -Wall -Wpedantic -Wextra\
         "$newproxy_dir"/proxy_main.c \
         "$newproxy_dir"/proxy_funcs.c \
         "$newproxy_dir"/proxy_private_funcs.c \

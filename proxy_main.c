@@ -4,20 +4,15 @@
 #include "proxy_trace.h"
 #include "user_funcs.h"
 
-#define NODE_PROXY <host>
-#define SERVICE_PROXY <port>
-
 int main(int argc, char* argv[]) {
     trace(TL_OK, "Proxy-server started...");
     if (proxy_epoll_init() == -1) {
         proxy_epoll_finish();
-    }
-    int proxy_socket_fd = get_listening_socket_fd(NODE_PROXY, SERVICE_PROXY);
-    if (proxy_socket_fd == -1) {
-        proxy_epoll_finish();
+        trace(TL_ERROR, "Epoll was not initialize");
         return -1;
     }
-    if (init(argc, argv) == -1) {
+    int proxy_socket_fd = init(argc, argv);
+    if (proxy_socket_fd == -1) {
         finish();
         proxy_epoll_finish();
         return -1;
