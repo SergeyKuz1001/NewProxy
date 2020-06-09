@@ -1,3 +1,5 @@
+// Copyright [2020] [Sergey Kuzivanov]
+
 #ifndef PROXY_FUNCS_H
 #define PROXY_FUNCS_H
 

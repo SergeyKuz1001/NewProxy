@@ -1,3 +1,5 @@
+// Copyright [2020] [Sergey Kuzivanov]
+
 #ifndef PROXY_TRACE_H
 #define PROXY_TRACE_H
 

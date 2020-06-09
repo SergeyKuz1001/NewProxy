@@ -1,3 +1,5 @@
+// Copyright [2020] [Sergey Kuzivanov]
+
 #ifndef USER_FUNCS_H
 #define USER_FUNCS_H
 

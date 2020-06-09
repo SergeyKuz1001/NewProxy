@@ -1,3 +1,5 @@
+// Copyright [2020] [Sergey Kuzivanov]
+
 #include <stdio.h>
 
 #include "proxy_private_funcs.h"

@@ -1,3 +1,5 @@
+# Copyright [2020] [Sergey Kuzivanov]
+
 TARGET=newproxy
 SOURCES:=$(wildcard proxy_*.c)
 OBJS:=$(patsubst %c,%o,${SOURCES})
